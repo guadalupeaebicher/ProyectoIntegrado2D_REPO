@@ -2,14 +2,19 @@ using UnityEngine;
 
 public class Conductor : MonoBehaviour
 {
-
+    [Header ("Song Settings")]
     public float songBpm; //Beats per minute
-    public float secPerBeat;
-    public float songPosition;
-    public float songPositionInBeats;
-    public float dspSongTime;
-    public float firstBeatOffset;
+    public float songOffset;
     public AudioSource musicSource;
+
+    [Header("Read-Only")]
+    public float secPerBeat;
+    public float songPosition; //Segundos
+    public float songPositionInBeats; //Beats
+
+    public float dspSongTime;
+   
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
