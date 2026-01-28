@@ -9,17 +9,29 @@ public class NoteSpawner : MonoBehaviour
     public Transform centerTarget;
 
     public float spawnBeats = 4f;
-    public float songLenghtInBeats;
+    public float songLengthInBeats = 384f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    private float nextBeat = 0f;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        float songBeat = Conductor.instance.songPositionInBeats;
+
+        if (songBeat >= nextBeat - spawnBeats)
+        {
+            SpawnNote(nextBeat);
+            nextBeat += 1f; // una nota por beat (ajústalo)
+        }
+    }
+
+    void SpawnNote(float targetBeat)
+    {
+        bool spawnLeft = Random.value < 0.5f;
+        Transform spawnPoint = spawnLeft ? leftSpawn : rightSpawn;
+
+        GameObject note = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
+
+        Note noteScript = note.GetComponent<Note>();
+        noteScript.Initialize(targetBeat, centerTarget.position);
     }
 }

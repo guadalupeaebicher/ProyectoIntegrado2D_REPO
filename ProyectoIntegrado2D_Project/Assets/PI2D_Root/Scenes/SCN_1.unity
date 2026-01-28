@@ -340,6 +340,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1139104937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1139104938}
+  - component: {fileID: 1139104939}
+  m_Layer: 0
+  m_Name: NoteSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1139104938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139104937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1139104939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139104937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec3218cc4db9bd742bd5e012cf92c2cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
+  notePrefab: {fileID: 0}
+  leftSpawn: {fileID: 0}
+  rightSpawn: {fileID: 0}
+  centerTarget: {fileID: 0}
+  spawnBeats: 4
+  songLengthInBeats: 384
 --- !u!1001 &6321263477924849634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -394,7 +444,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7479832861307971633, guid: 8e943646c79a1734ba5c6c0c7a23b994, type: 3}
       propertyPath: songBpm
-      value: 122
+      value: 123
+      objectReference: {fileID: 0}
+    - target: {fileID: 7479832861307971633, guid: 8e943646c79a1734ba5c6c0c7a23b994, type: 3}
+      propertyPath: songOffset
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7479832861307971633, guid: 8e943646c79a1734ba5c6c0c7a23b994, type: 3}
       propertyPath: musicSource
@@ -412,3 +466,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 6321263477924849634}
+  - {fileID: 1139104938}
