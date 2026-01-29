@@ -4,8 +4,11 @@ public class Note : MonoBehaviour
 {
     private float targetBeat;          // En qué beat debe llegar la nota
     private Vector3 targetPosition;    // Hacia dónde se mueve (centro)
+    public Transform approachCircle;
 
-    private bool initialized = false;
+    float startDistance;
+    bool initialized = false;
+    private Vector3 approachStartScale;
 
     // Llamado desde NoteSpawner para configurar la nota
     public void Initialize(float _targetBeat, Vector3 _targetPosition)
@@ -13,6 +16,11 @@ public class Note : MonoBehaviour
         targetBeat = _targetBeat;
         targetPosition = _targetPosition;
         initialized = true;
+
+        startDistance = Vector3.Distance(transform.position, targetPosition);
+
+        if (approachCircle != null )
+            approachStartScale = approachCircle.localScale;
     }
 
     void Update()
@@ -20,19 +28,29 @@ public class Note : MonoBehaviour
         if (!initialized)
             return;
 
-        // Calcula cuánto falta para el beat (suponiendo que Conductor tiene la info)
+        // Calcula cuánto falta para el beat
         float songBeat = Conductor.instance.songPositionInBeats;
 
-        // Tiempo restante para llegar al beat objetivo
+        // Tiempo restante para llegar al beat.
         float beatsLeft = targetBeat - songBeat;
 
-        // Mueve la nota hacia el centro según beatsLeft (ajusta velocidad a tu gusto)
-        float speed = 5f;
 
-        // Movimiento simple hacia target
+        // Mueve la nota hacia el centro según beatsLeft.
+        float speed = 6f;
+
+        // Movimiento hacia el target
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        // Opcional: destruir la nota si ya llegó o pasó el beat objetivo
+        if (approachCircle != null)
+        {
+            float currentDistance = Vector3.Distance(transform.position, targetPosition);
+
+            float t = Mathf.Clamp01(1f - (currentDistance / startDistance));
+
+            approachCircle.localScale = Vector3.Lerp(approachStartScale, Vector3.one, t);
+        }
+
+        // Destruir la nota una vez llega al centro
         if (beatsLeft <= 0)
         {
             Destroy(gameObject);
