@@ -6,7 +6,8 @@ public class NoteSpawner : MonoBehaviour
 
     public Transform leftSpawn;
     public Transform rightSpawn;
-    public Transform centerTarget;
+    public Transform rightHitPoint;
+    public Transform leftHitPoint;
 
     public float spawnBeats = 4f;
     public float songLengthInBeats = 384f;
@@ -20,7 +21,7 @@ public class NoteSpawner : MonoBehaviour
         if (songBeat >= nextBeat - spawnBeats)
         {
             SpawnNote(nextBeat);
-            nextBeat += 1f; // una nota por beat (ajústalo)
+            nextBeat += 1f; // una nota por beat 
         }
     }
 
@@ -32,6 +33,8 @@ public class NoteSpawner : MonoBehaviour
         GameObject note = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
 
         Note noteScript = note.GetComponent<Note>();
-        noteScript.Initialize(targetBeat, centerTarget.position);
+        Transform hitPoint = spawnLeft ? leftHitPoint : rightHitPoint;
+        noteScript.Initialize(targetBeat, hitPoint.position);
+
     }
 }

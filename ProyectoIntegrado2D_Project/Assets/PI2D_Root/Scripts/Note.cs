@@ -7,7 +7,7 @@ public class Note : MonoBehaviour
     public Transform approachCircle;
 
     float startDistance;
-    bool initialized = false;
+    bool Initialized = false;
     private Vector3 approachStartScale;
 
     // Llamado desde NoteSpawner para configurar la nota
@@ -15,7 +15,7 @@ public class Note : MonoBehaviour
     {
         targetBeat = _targetBeat;
         targetPosition = _targetPosition;
-        initialized = true;
+        Initialized = true;
 
         startDistance = Vector3.Distance(transform.position, targetPosition);
 
@@ -25,7 +25,7 @@ public class Note : MonoBehaviour
 
     void Update()
     {
-        if (!initialized)
+        if (!Initialized)
             return;
 
         // Calcula cuánto falta para el beat
