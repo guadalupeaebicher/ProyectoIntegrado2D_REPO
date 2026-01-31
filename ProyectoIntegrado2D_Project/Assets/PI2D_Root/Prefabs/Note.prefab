@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8263802544754752620}
   m_Layer: 0
   m_Name: Note
-  m_TagString: Untagged
+  m_TagString: Note
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,6 +105,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea58faed65b70c74d8a14caa41c144c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Note
+  noteDirection: 0
+  perfectWindow: 0.1
+  goodWindow: 0.25
+  missWindow: 0.4
   approachCircle: {fileID: 4086314540139534281}
 --- !u!58 &8263802544754752620
 CircleCollider2D:
@@ -136,7 +140,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
