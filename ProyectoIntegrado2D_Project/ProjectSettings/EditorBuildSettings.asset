@@ -6,8 +6,23 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/PI2D_Root/Scenes/MainMenu.unity
+    guid: 903ee4f59264dcb4da5113d1b66885f5
+  - enabled: 1
+    path: Assets/PI2D_Root/Scenes/SongSelector.unity
+    guid: 861a09de485438948b7831c2fc8a612d
+  - enabled: 1
     path: Assets/PI2D_Root/Scenes/SCN_1.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/PI2D_Root/Scenes/Victory.unity
+    guid: f48523fb5f4faa54e8d774db0931d7c2
+  - enabled: 1
+    path: Assets/PI2D_Root/Scenes/Lose.unity
+    guid: e5b92aac5bd1cd449823de11897a0a61
+  - enabled: 1
+    path: Assets/PI2D_Root/Scenes/Controls.unity
+    guid: e0af935742d83ea4dbd0493dc821d3cf
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
