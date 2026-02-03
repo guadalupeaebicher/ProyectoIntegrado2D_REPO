@@ -105,11 +105,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea58faed65b70c74d8a14caa41c144c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Note
+  targetBeat: 0
   noteDirection: 0
   perfectWindow: 0.1
   goodWindow: 0.25
   missWindow: 0.4
   approachCircle: {fileID: 4086314540139534281}
+  alreadyHit: 0
 --- !u!58 &8263802544754752620
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -173,7 +175,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5775812437435216463}

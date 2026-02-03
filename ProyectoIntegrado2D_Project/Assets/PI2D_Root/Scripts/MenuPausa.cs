@@ -1,54 +1,54 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class MenuPausa : MonoBehaviour
 {
     public GameObject menuPausa;
+    public InputActionReference pauseAction;
 
-    private bool juegoPausado = false;
-    private bool initialized = false;
+    private bool juegoPausado;
+    private bool initialized;
 
-    // Unity 6 activa la UI antes de cualquier método normal.
-    // Esto garantiza que la desactivamos UNA VEZ después del rebuild.
-    void LateUpdate()
+    void OnEnable()
     {
-        if (!initialized)
-        {
-            ForceHideMenu();
-            initialized = true;
-        }
+        pauseAction.action.performed += OnPause;
+        pauseAction.action.Enable();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (juegoPausado)
-                Reanudar();
-            else
-                Pausar();
-        }
+    void OnDisable()
+    {
+        pauseAction.action.performed -= OnPause;
+        pauseAction.action.Disable();
+    }
+
+    void Start()
+    {
+        ForceHideMenu(); // Unity 6 friendly
+        initialized = true;
+    }
+
+    private void OnPause(InputAction.CallbackContext ctx)
+    {
+        if (juegoPausado)
+            Reanudar();
+        else
+            Pausar();
     }
 
     private void ForceHideMenu()
     {
-        if (menuPausa == null) return;
+        if (!menuPausa) return;
 
-        // Desactivar hijos
-        foreach (Transform t in menuPausa.transform)
-            t.gameObject.SetActive(false);
-
-        // Desactivar menú
         menuPausa.SetActive(false);
 
-        // Asegurar que el tiempo va normal
         Time.timeScale = 1;
         juegoPausado = false;
     }
 
     public void Pausar()
     {
-        if (menuPausa == null) return;
-
-        foreach (Transform t in menuPausa.transform)
-            t.gameObject.SetActive(true);
+        if (!menuPausa) return;
 
         menuPausa.SetActive(true);
 
@@ -61,7 +61,7 @@ public class MenuPausa : MonoBehaviour
 
     public void Reanudar()
     {
-        ForceHideMenu(); // Reusar lógica
+        ForceHideMenu();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -70,7 +70,7 @@ public class MenuPausa : MonoBehaviour
     public void IrAlMenu()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MenuPrincipal");
     }
 
     public void Salir()

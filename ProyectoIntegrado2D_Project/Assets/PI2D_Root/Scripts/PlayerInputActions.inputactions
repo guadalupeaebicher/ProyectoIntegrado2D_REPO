@@ -3,31 +3,22 @@
     "name": "PlayerInputActions",
     "maps": [
         {
-            "name": "Player",
-            "id": "c5f729c3-446b-4770-be43-4d4340ebb09d",
+            "name": "Gameplay",
+            "id": "f5f57500-9be5-4b04-8566-5ea74823f97b",
             "actions": [
                 {
                     "name": "Hit",
                     "type": "Button",
-                    "id": "40aa0615-0d70-4291-9e91-a85437c9dd55",
+                    "id": "c2c3d65b-6adb-4ecf-bd0e-1283fec52b2c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Left",
+                    "name": "Flip",
                     "type": "Button",
-                    "id": "e7accbec-ad5b-4031-b922-f1d501154c3c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Right",
-                    "type": "Button",
-                    "id": "897efa57-5f7c-4710-a22d-965c4f3e1358",
+                    "id": "0149c2eb-ff75-4c88-bd4d-68c5405819c9",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -36,7 +27,7 @@
                 {
                     "name": "Pause",
                     "type": "Button",
-                    "id": "81ce0263-0acd-4ea9-86aa-961e5f060176",
+                    "id": "07c4a917-0db9-41a8-9a46-69991a00f371",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -46,7 +37,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "27e8091e-63fc-4945-9d90-c264b7898f6c",
+                    "id": "a8adc017-31aa-4911-8669-3062a91299bc",
                     "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
@@ -57,29 +48,29 @@
                 },
                 {
                     "name": "",
-                    "id": "1ab4929f-cd95-4db4-8b71-20f2b2a85323",
+                    "id": "55b1a6e0-b235-4c52-b679-e700aaae8ad7",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Flip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "987d49f3-283d-46ff-b0c3-95e7881d834a",
+                    "id": "8d26b948-421f-44d3-a3ea-37ab025ed68f",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Right",
+                    "action": "Flip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "40fd336e-9321-46f5-8115-f90b394bd82d",
+                    "id": "0bf9444b-89db-4829-8813-2698f2a32c10",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
