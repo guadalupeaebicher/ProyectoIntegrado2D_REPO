@@ -7,7 +7,7 @@
             "id": "f5f57500-9be5-4b04-8566-5ea74823f97b",
             "actions": [
                 {
-                    "name": "Hit",
+                    "name": "Attack",
                     "type": "Button",
                     "id": "c2c3d65b-6adb-4ecf-bd0e-1283fec52b2c",
                     "expectedControlType": "",
@@ -16,7 +16,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Flip",
+                    "name": "LookRight",
                     "type": "Button",
                     "id": "0149c2eb-ff75-4c88-bd4d-68c5405819c9",
                     "expectedControlType": "",
@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LookLeft",
+                    "type": "Button",
+                    "id": "43c6fd49-0263-4d09-9d82-b3e7989ca914",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -42,18 +51,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "55b1a6e0-b235-4c52-b679-e700aaae8ad7",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Flip",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -64,7 +62,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Flip",
+                    "action": "LookRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -76,6 +74,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43b45dd0-cca4-47b2-81ef-433ee16f79d5",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LookLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
