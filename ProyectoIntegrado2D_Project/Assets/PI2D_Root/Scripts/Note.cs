@@ -2,26 +2,30 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    //Config
-    public float targetBeat;                 // Beat exacto del hit
-    public FacingDirection noteDirection;      // Lado desde el que viene
+    // Config
+    public float targetBeat;
+    public FacingDirection noteDirection;
 
     [Header("Timing Windows")]
     public float perfectWindow = 0.1f;
     public float goodWindow = 0.25f;
     public float missWindow = 0.4f;
 
-    //Movimiento
+    // Movimiento
     private Vector3 targetPosition;
     public Transform approachCircle;
 
     private float startDistance;
     private bool initialized = false;
-    private Vector3 approachStartScale;
 
     public bool alreadyHit = false;
 
-    //Initialize
+    [Header("Approach Circle")]
+    public float approachMaxMultiplier = 2.5f; // cuánto más grande al aparecer
+
+    private Vector3 approachBaseScale;
+
+    // Initialize
     public void Initialize(float _targetBeat, Vector3 _targetPosition, FacingDirection _direction)
     {
         targetBeat = _targetBeat;
@@ -33,7 +37,7 @@ public class Note : MonoBehaviour
         startDistance = Vector3.Distance(transform.position, targetPosition);
 
         if (approachCircle != null)
-            approachStartScale = approachCircle.localScale;
+            approachBaseScale = approachCircle.localScale;
     }
 
     void Update()
@@ -42,9 +46,8 @@ public class Note : MonoBehaviour
             return;
 
         float songBeat = Conductor.instance.songPositionInBeats;
-        float beatsLeft = targetBeat - songBeat;
 
-        //Movimiento
+        // Movimiento
         float speed = 6f;
         transform.position = Vector3.MoveTowards(
             transform.position,
@@ -52,21 +55,23 @@ public class Note : MonoBehaviour
             speed * Time.deltaTime
         );
 
-        //Approach circle
+        // Approach circle (FIX FINAL)
         if (approachCircle != null)
         {
             float currentDistance = Vector3.Distance(transform.position, targetPosition);
-            float t = Mathf.Clamp01(1f - (currentDistance / startDistance));
-            approachCircle.localScale = Vector3.Lerp(approachStartScale, Vector3.one, t);
+            float t = Mathf.Clamp01(currentDistance / startDistance);
+
+            // lejos = grande / cerca = tamaño base
+            float multiplier = Mathf.Lerp(1f, approachMaxMultiplier, t);
+            approachCircle.localScale = approachBaseScale * multiplier;
         }
 
-        //Miss automático
+        // Miss automático
         if (songBeat > targetBeat + missWindow)
         {
             Miss();
         }
     }
-
 
     public HitResult TryHit(FacingDirection playerFacing)
     {
@@ -98,7 +103,7 @@ public class Note : MonoBehaviour
         return HitResult.None;
     }
 
-    //Results
+    // Results
     private void Hit()
     {
         alreadyHit = true;
@@ -112,7 +117,7 @@ public class Note : MonoBehaviour
     }
 }
 
-//Enums
+// Enums
 public enum HitResult
 {
     None,

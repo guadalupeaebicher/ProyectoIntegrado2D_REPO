@@ -1192,7 +1192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3218cc4db9bd742bd5e012cf92c2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
-  notePrefab: {fileID: 8756405573502143720, guid: 598a1299c4c0ffe4896a565720640718, type: 3}
+  notePrefab: {fileID: 5423746548471727681, guid: 69e9d72f98e43034fa7ebe498b364527, type: 3}
   leftSpawn: {fileID: 775420051}
   rightSpawn: {fileID: 121751104}
   rightHitPoint: {fileID: 1804772849}

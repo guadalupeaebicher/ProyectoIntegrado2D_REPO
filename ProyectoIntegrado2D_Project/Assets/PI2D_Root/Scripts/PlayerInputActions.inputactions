@@ -16,15 +16,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LookRight",
-                    "type": "Button",
-                    "id": "0149c2eb-ff75-4c88-bd4d-68c5405819c9",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "07c4a917-0db9-41a8-9a46-69991a00f371",
@@ -34,13 +25,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LookLeft",
-                    "type": "Button",
-                    "id": "43c6fd49-0263-4d09-9d82-b3e7989ca914",
+                    "name": "Flip",
+                    "type": "Value",
+                    "id": "89ba2397-2b3a-4fdd-9ea1-480f044b1f98",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -57,12 +48,12 @@
                 },
                 {
                     "name": "",
-                    "id": "8d26b948-421f-44d3-a3ea-37ab025ed68f",
-                    "path": "<Keyboard>/rightArrow",
+                    "id": "07726f7d-c7a0-422e-84fd-a61204b05041",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LookRight",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -79,12 +70,56 @@
                 },
                 {
                     "name": "",
-                    "id": "43b45dd0-cca4-47b2-81ef-433ee16f79d5",
+                    "id": "e9fe2855-5582-4314-9eb1-7f2fc0fc7dc1",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9d6aa103-9d18-4bf8-a5b8-54ece63cb6b3",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Flip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee6110cd-c17d-4be2-b687-0fe0516db1cf",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Flip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b51015bf-ba04-4125-8d1a-12af935105e8",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LookLeft",
+                    "action": "Flip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7325e78a-032d-406f-baef-6fc9992c347f",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Flip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
