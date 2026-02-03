@@ -215,7 +215,7 @@ MonoBehaviour:
   perfectWindow: 0.1
   goodWindow: 0.25
   missWindow: 0.4
-  approachCircle: {fileID: 2484535872031880261}
+  approachCircle: {fileID: 0}
   alreadyHit: 0
 --- !u!58 &-8593620617448350648
 CircleCollider2D:
