@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    // ===== CONFIG =====
+    //Config
     public float targetBeat;                 // Beat exacto del hit
     public FacingDirection noteDirection;      // Lado desde el que viene
 
@@ -11,7 +11,7 @@ public class Note : MonoBehaviour
     public float goodWindow = 0.25f;
     public float missWindow = 0.4f;
 
-    // ===== MOVIMIENTO =====
+    //Movimiento
     private Vector3 targetPosition;
     public Transform approachCircle;
 
@@ -21,7 +21,7 @@ public class Note : MonoBehaviour
 
     public bool alreadyHit = false;
 
-    // ===== INIT =====
+    //Initialize
     public void Initialize(float _targetBeat, Vector3 _targetPosition, FacingDirection _direction)
     {
         targetBeat = _targetBeat;
@@ -44,7 +44,7 @@ public class Note : MonoBehaviour
         float songBeat = Conductor.instance.songPositionInBeats;
         float beatsLeft = targetBeat - songBeat;
 
-        // ===== MOVIMIENTO =====
+        //Movimiento
         float speed = 6f;
         transform.position = Vector3.MoveTowards(
             transform.position,
@@ -52,7 +52,7 @@ public class Note : MonoBehaviour
             speed * Time.deltaTime
         );
 
-        // ===== APPROACH CIRCLE =====
+        //Approach circle
         if (approachCircle != null)
         {
             float currentDistance = Vector3.Distance(transform.position, targetPosition);
@@ -60,14 +60,14 @@ public class Note : MonoBehaviour
             approachCircle.localScale = Vector3.Lerp(approachStartScale, Vector3.one, t);
         }
 
-        // ===== MISS AUTOMÁTICO =====
+        //Miss automático
         if (songBeat > targetBeat + missWindow)
         {
             Miss();
         }
     }
 
-    // ===== LLAMADO DESDE EL JUGADOR =====
+
     public HitResult TryHit(FacingDirection playerFacing)
     {
         if (alreadyHit)
@@ -98,7 +98,7 @@ public class Note : MonoBehaviour
         return HitResult.None;
     }
 
-    // ===== RESULTADOS =====
+    //Results
     private void Hit()
     {
         alreadyHit = true;
@@ -112,7 +112,7 @@ public class Note : MonoBehaviour
     }
 }
 
-// ===== ENUMS =====
+//Enums
 public enum HitResult
 {
     None,
