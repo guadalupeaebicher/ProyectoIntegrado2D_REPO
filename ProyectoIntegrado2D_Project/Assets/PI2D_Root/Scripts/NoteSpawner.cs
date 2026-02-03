@@ -6,39 +6,36 @@ public class NoteSpawner : MonoBehaviour
 
     public Transform leftSpawn;
     public Transform rightSpawn;
-    public Transform rightHitPoint;
     public Transform leftHitPoint;
+    public Transform rightHitPoint;
 
-    public float spawnBeats = 4f;
-    public float songLengthInBeats = 384f;
-
-    private float nextBeat = 0f;
+    public float spawnBeats = 4f; // cuánto antes spawnear la nota antes del target
+    private float nextTargetBeat = 0f; // controla el beat de la próxima nota
 
     void Update()
     {
         float songBeat = Conductor.instance.songPositionInBeats;
 
-        if (songBeat >= nextBeat - spawnBeats)
+        // Si estamos en el momento para spawnear la siguiente nota (spawnBeats antes del hit)
+        if (songBeat >= nextTargetBeat - spawnBeats)
         {
-            SpawnNote(nextBeat);
-            nextBeat += 1f; // una nota por beat
+            SpawnNote(nextTargetBeat);
+            nextTargetBeat += 1f; // siguiente nota 1 beat después (puedes ajustar)
         }
     }
 
     void SpawnNote(float targetBeat)
     {
-        bool spawnLeft = Random.value < 0.5f;
+        bool fromLeft = Random.value < 0.5f;
 
-        Transform spawnPoint = spawnLeft ? leftSpawn : rightSpawn;
-        Transform hitPoint = spawnLeft ? leftHitPoint : rightHitPoint;
+        Transform spawnPoint = fromLeft ? leftSpawn : rightSpawn;
+        Transform hitPoint = fromLeft ? leftHitPoint : rightHitPoint;
 
         GameObject noteGO = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
-        Note noteScript = noteGO.GetComponent<Note>();
+        Note note = noteGO.GetComponent<Note>();
 
-        FacingDirection direction = spawnLeft
-            ? FacingDirection.Right   // viene desde la izquierda, se golpea mirando derecha
-            : FacingDirection.Left;   // viene desde la derecha, se golpea mirando izquierda
+        FacingDirection direction = fromLeft ? FacingDirection.Left : FacingDirection.Right;
 
-        noteScript.Initialize(targetBeat, hitPoint.position, direction);
+        note.Initialize(targetBeat, hitPoint.position, direction);
     }
 }
