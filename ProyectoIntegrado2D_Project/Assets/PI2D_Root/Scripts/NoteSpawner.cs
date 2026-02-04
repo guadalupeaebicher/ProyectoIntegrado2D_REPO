@@ -34,7 +34,8 @@ public class NoteSpawner : MonoBehaviour
         GameObject noteGO = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
         Note note = noteGO.GetComponent<Note>();
 
-        FacingDirection direction = fromLeft ? FacingDirection.Left : FacingDirection.Right;
+        // Invertimos la dirección para que el jugador deba mirar hacia la nota
+        FacingDirection direction = fromLeft ? FacingDirection.Right : FacingDirection.Left;
 
         note.Initialize(targetBeat, hitPoint.position, direction);
     }
