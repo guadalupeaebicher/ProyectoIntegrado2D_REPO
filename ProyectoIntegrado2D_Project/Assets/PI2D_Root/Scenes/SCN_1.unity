@@ -283,6 +283,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
   currentHealth: 0
+--- !u!95 &188269738 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8953070670549107561, guid: c3efe289295bdfa4782ef9eb3377d1d3, type: 3}
+  m_PrefabInstance: {fileID: 5901734437699790814}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &257867192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2438,8 +2443,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7416331524437386990, guid: c3efe289295bdfa4782ef9eb3377d1d3, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8491427002683386330, guid: c3efe289295bdfa4782ef9eb3377d1d3, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 188269738}
     - target: {fileID: 8491427002683386330, guid: c3efe289295bdfa4782ef9eb3377d1d3, type: 3}
       propertyPath: hitPoint
       value: 

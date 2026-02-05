@@ -12,6 +12,11 @@ public class PlayerController : MonoBehaviour
     public GameObject goodPopupPrefab;
     public GameObject missPopupPrefab;
 
+    // ===== NUEVO =====
+    [Header("Animation")]
+    public Animator animator;
+    // =================
+
     private bool isFacingRight = true;
     private PlayerInputActions controls;
 
@@ -19,7 +24,6 @@ public class PlayerController : MonoBehaviour
     {
         controls = new PlayerInputActions();
 
-        //Flip
         controls.Gameplay.Flip.performed += ctx =>
         {
             if (ctx.control.name == "leftArrow" || ctx.control.name == "dpadLeft")
@@ -28,7 +32,6 @@ public class PlayerController : MonoBehaviour
                 FaceLeft();
         };
 
-        //Attack
         controls.Gameplay.Attack.performed += ctx =>
         {
             TryHitNote();
@@ -38,7 +41,6 @@ public class PlayerController : MonoBehaviour
     private void OnEnable() => controls.Gameplay.Enable();
     private void OnDisable() => controls.Gameplay.Disable();
 
-    //Flip
     private void FaceLeft()
     {
         if (isFacingRight)
@@ -64,7 +66,6 @@ public class PlayerController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    //Hit logic
     private void TryHitNote()
     {
         FacingDirection facing = isFacingRight
@@ -91,8 +92,8 @@ public class PlayerController : MonoBehaviour
 
         if (bestNote == null)
         {
-            // Fallaste completamente → miss visual inmediato
             ShowHitPopup(HitResult.Miss, facing);
+            PlayHitAnimation(); 
             return;
         }
 
@@ -101,11 +102,18 @@ public class PlayerController : MonoBehaviour
         if (result != HitResult.None)
         {
             ShowHitPopup(result, bestNote.noteDirection);
+            PlayHitAnimation(); 
+        }
+    }
+    private void PlayHitAnimation()
+    {
+        if (animator != null)
+        {
+            animator.ResetTrigger("Hit"); // seguridad
+            animator.SetTrigger("Hit");
         }
     }
 
-
-    //Popups
     private void ShowHitPopup(HitResult result, FacingDirection noteDirection)
     {
         GameObject prefabToSpawn = null;
@@ -143,4 +151,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-

@@ -1,3 +1,6 @@
+using UnityEngine;
+
+[System.Serializable]
 public class LevelResult
 {
     public int score;
