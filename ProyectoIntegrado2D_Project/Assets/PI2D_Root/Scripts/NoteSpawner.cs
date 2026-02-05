@@ -9,18 +9,17 @@ public class NoteSpawner : MonoBehaviour
     public Transform leftHitPoint;
     public Transform rightHitPoint;
 
-    public float spawnBeats = 4f; // cuánto antes spawnear la nota antes del target
-    private float nextTargetBeat = 0f; // controla el beat de la próxima nota
+    public float spawnBeats = 4f;
+    private float nextTargetBeat = 0f;
 
     void Update()
     {
         float songBeat = Conductor.instance.songPositionInBeats;
 
-        // Si estamos en el momento para spawnear la siguiente nota (spawnBeats antes del hit)
         if (songBeat >= nextTargetBeat - spawnBeats)
         {
             SpawnNote(nextTargetBeat);
-            nextTargetBeat += 1f; // siguiente nota 1 beat después (puedes ajustar)
+            nextTargetBeat += 1f;
         }
     }
 
@@ -34,9 +33,27 @@ public class NoteSpawner : MonoBehaviour
         GameObject noteGO = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
         Note note = noteGO.GetComponent<Note>();
 
-        // Invertimos la dirección para que el jugador deba mirar hacia la nota
-        FacingDirection direction = fromLeft ? FacingDirection.Right : FacingDirection.Left;
+        // SOLO las notas del LEFT SPAWN se voltean para mirar a la derecha
+        if (fromLeft) // fromLeft = true significa que viene del left spawn
+        {
+            // Cambiar escala en X a negativa para voltear horizontalmente
+            Vector3 currentScale = noteGO.transform.localScale;
+            noteGO.transform.localScale = new Vector3(
+                -Mathf.Abs(currentScale.x),  // X negativo (voltea horizontalmente)
+                currentScale.y,              // Y se mantiene igual
+                currentScale.z               // Z se mantiene igual
+            );
 
+            // Si prefieres mantener el valor absoluto del scale original:
+            // noteGO.transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), 
+            //                                           currentScale.y, 
+            //                                           currentScale.z);
+        }
+        // Las notas del right spawn (fromLeft = false) se quedan con su escala original
+        // mirando a la izquierda (como el prefab original)
+
+        FacingDirection direction = fromLeft ? FacingDirection.Right : FacingDirection.Left;
         note.Initialize(targetBeat, hitPoint.position, direction);
     }
 }
+    
