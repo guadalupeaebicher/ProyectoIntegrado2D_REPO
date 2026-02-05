@@ -4,6 +4,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
     [SerializeField] private int currentHealth; // Cambiado a serialized para ver en Inspector
+    private HealthBar healthBar;
 
     void Awake()
     {
@@ -13,6 +14,8 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+
+        healthBar = GetComponentInChildren<HealthBar>();
         Debug.Log("========================================");
         Debug.Log("🟢 PLAYERHEALTH - Start");
         Debug.Log($"   Objeto: {gameObject.name}");
@@ -20,7 +23,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log($"   Instancia: {GetInstanceID()}");
         Debug.Log("========================================\n");
     }
-
+ 
     void OnEnable()
     {
         Debug.Log("🟡 PLAYERHEALTH - OnEnable");
@@ -121,5 +124,6 @@ public class PlayerHealth : MonoBehaviour
     public void DebugHealth()
     {
         Debug.Log($"📈 DebugHealth(): {currentHealth}/{maxHealth}");
+          //update del healtbar
     }
 }

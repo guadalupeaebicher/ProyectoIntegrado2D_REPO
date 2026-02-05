@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int puntos;
 
     // Propiedades públicas para acceder desde otros scripts
-    public int VidaActual => vidaActual;
-    public int VidaMaxima => vidaMaxima;
+    public float VidaActual => vidaActual;
+    public float VidaMaxima => vidaMaxima;
     public int Puntos => puntos;
 
     void Awake()
