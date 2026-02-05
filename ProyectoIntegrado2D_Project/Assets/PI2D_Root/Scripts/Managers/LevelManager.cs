@@ -22,6 +22,9 @@ public class AudioLevelManager : MonoBehaviour
     {
         LevelResult result = ScoreManager.instance.GetFinalResult();
 
+        //Guardar resultado para la siguiente escena
+        GameResults.lastResult = result;
+
         Debug.Log("=== RESULTADO FINAL ===");
         Debug.Log($"Score: {result.score}");
         Debug.Log($"Max Combo: {result.maxCombo}");

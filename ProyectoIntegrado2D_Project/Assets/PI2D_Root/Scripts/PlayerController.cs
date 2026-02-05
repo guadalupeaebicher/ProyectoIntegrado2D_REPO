@@ -105,14 +105,14 @@ public class PlayerController : MonoBehaviour
             PlayHitAnimation(); 
         }
     }
-    private void PlayHitAnimation()
+   private void PlayHitAnimation()
+{
+    if (animator != null)
     {
-        if (animator != null)
-        {
-            animator.ResetTrigger("Hit"); // seguridad
-            animator.SetTrigger("Hit");
-        }
+        animator.ResetTrigger("Hit"); // seguridad
+        animator.SetTrigger("Hit");
     }
+}
 
     private void ShowHitPopup(HitResult result, FacingDirection noteDirection)
     {
