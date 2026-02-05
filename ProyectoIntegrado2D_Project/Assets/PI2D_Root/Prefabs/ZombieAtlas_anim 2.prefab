@@ -972,11 +972,9 @@ MonoBehaviour:
   missWindow: 0.4
   missDamage: 1
   wrongSideDamage: 1
+  leadBeats: 4
   alreadyHit: 0
-  moveSpeed: 6
-  approachCircle: {fileID: 770192443082790287}
-  approachMaxMultiplier: 2.5
-  approachMinMultiplier: 0.1
+  hitAnchor: {fileID: 0}
 --- !u!50 &5587779850592328774
 Rigidbody2D:
   serializedVersion: 5
