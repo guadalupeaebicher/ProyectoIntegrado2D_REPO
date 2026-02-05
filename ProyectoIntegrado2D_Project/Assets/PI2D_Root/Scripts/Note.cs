@@ -2,42 +2,50 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    // Config
+    // --- Timing ---
     public float targetBeat;
     public FacingDirection noteDirection;
 
     [Header("Timing Windows")]
-    public float perfectWindow = 0.1f;
+    public float perfectWindow = 0.5f;
     public float goodWindow = 0.25f;
     public float missWindow = 0.4f;
 
-    // Movimiento
-    private Vector3 targetPosition;
-    public Transform approachCircle;
-
-    private float startDistance;
+    // --- State ---
+    public bool alreadyHit = false;
     private bool initialized = false;
 
-    public bool alreadyHit = false;
+    // --- Movement ---
+    private Vector3 targetPosition;
+    public float moveSpeed = 6f;
 
+    // --- Approach Circle ---
     [Header("Approach Circle")]
-    public float approachMaxMultiplier = 2.5f; // cuánto más grande al aparecer
+    public Transform approachCircle;
+    public float approachMaxMultiplier = 2.5f;
+    public float approachMinMultiplier = 0.6f; 
+
 
     private Vector3 approachBaseScale;
+    private float startDistance;
 
-    // Initialize
+    // --- Events ---
+    public event System.Action<HitResult, FacingDirection> OnHitResult;
+
+    // --- Init ---
     public void Initialize(float _targetBeat, Vector3 _targetPosition, FacingDirection _direction)
     {
         targetBeat = _targetBeat;
         targetPosition = _targetPosition;
         noteDirection = _direction;
-
         initialized = true;
 
-        startDistance = Vector3.Distance(transform.position, targetPosition);
-
         if (approachCircle != null)
+        {
             approachBaseScale = approachCircle.localScale;
+            startDistance = Vector3.Distance(transform.position, targetPosition);
+            approachCircle.localScale = approachBaseScale * approachMaxMultiplier;
+        }
     }
 
     void Update()
@@ -47,32 +55,30 @@ public class Note : MonoBehaviour
 
         float songBeat = Conductor.instance.songPositionInBeats;
 
-        // Movimiento
-        float speed = 6f;
+        // --- Move towards hit point ---
         transform.position = Vector3.MoveTowards(
             transform.position,
             targetPosition,
-            speed * Time.deltaTime
+            moveSpeed * Time.deltaTime
         );
 
-        // Approach circle (FIX FINAL)
-        if (approachCircle != null)
+        // --- Approach circle scaling ---
+        if (approachCircle != null && startDistance > 0f)
         {
             float currentDistance = Vector3.Distance(transform.position, targetPosition);
             float t = Mathf.Clamp01(currentDistance / startDistance);
-
-            // lejos = grande / cerca = tamaño base
-            float multiplier = Mathf.Lerp(1f, approachMaxMultiplier, t);
+            float multiplier = Mathf.Lerp(approachMinMultiplier, approachMaxMultiplier, t);
             approachCircle.localScale = approachBaseScale * multiplier;
         }
 
-        // Miss automático
+        // --- Auto miss ---
         if (songBeat > targetBeat + missWindow)
         {
             Miss();
         }
     }
 
+    // --- Hit logic ---
     public HitResult TryHit(FacingDirection playerFacing)
     {
         if (alreadyHit)
@@ -84,51 +90,33 @@ public class Note : MonoBehaviour
         float songBeat = Conductor.instance.songPositionInBeats;
         float error = Mathf.Abs(songBeat - targetBeat);
 
-        if (error <= perfectWindow)
-        {
-            Hit();
-            return HitResult.Perfect;
-        }
-        else if (error <= goodWindow)
-        {
-            Hit();
-            return HitResult.Good;
-        }
-        else if (error <= missWindow)
-        {
-            Miss();
-            return HitResult.Miss;
-        }
+        HitResult result = HitResult.None;
 
-        return HitResult.None;
+        if (error <= perfectWindow)
+            result = HitResult.Perfect;
+        else if (error <= goodWindow)
+            result = HitResult.Good;
+        else if (error <= missWindow)
+            result = HitResult.Miss;
+
+        if (result != HitResult.None)
+            ResolveHit(result);
+
+        return result;
     }
 
-    // Results
-    private void Hit()
+    // --- Results ---
+    private void ResolveHit(HitResult result)
     {
         alreadyHit = true;
+        OnHitResult?.Invoke(result, noteDirection);
         Destroy(gameObject);
     }
 
     private void Miss()
     {
         alreadyHit = true;
+        OnHitResult?.Invoke(HitResult.Miss, noteDirection);
         Destroy(gameObject);
     }
-}
-
-// Enums
-public enum HitResult
-{
-    None,
-    Perfect,
-    Good,
-    Miss,
-    WrongSide
-}
-
-public enum FacingDirection
-{
-    Left,
-    Right
 }

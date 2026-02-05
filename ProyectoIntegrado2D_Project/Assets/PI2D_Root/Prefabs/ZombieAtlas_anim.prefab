@@ -966,12 +966,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Note
   targetBeat: 0
   noteDirection: 0
-  perfectWindow: 0.1
+  perfectWindow: 0.5
   goodWindow: 0.25
   missWindow: 0.4
-  approachCircle: {fileID: 770192443082790287}
   alreadyHit: 0
+  moveSpeed: 6
+  approachCircle: {fileID: 770192443082790287}
   approachMaxMultiplier: 2.5
+  approachMinMultiplier: 0.1
 --- !u!1 &5612795245080781198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1707,6 +1709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 770192443082790287}
   - component: {fileID: 1466717036843029021}
+  - component: {fileID: 2021190621159326292}
   m_Layer: 0
   m_Name: ApproachCircle
   m_TagString: Untagged
@@ -1787,3 +1790,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2021190621159326292
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8962039198411090406}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8d6ec1678d0f6c34088cfbee16c35b9d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
