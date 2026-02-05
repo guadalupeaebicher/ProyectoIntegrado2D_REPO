@@ -2,323 +2,161 @@
 
 public class Note : MonoBehaviour
 {
-    // --- Timing ---
+    // -------- Timing --------
     public float targetBeat;
     public FacingDirection noteDirection;
 
     [Header("Timing Windows")]
-    public float perfectWindow = 0.5f;
-    public float goodWindow = 0.25f;
-    public float missWindow = 0.4f;
+    public float perfectWindow = 0.15f;
+    public float goodWindow = 0.30f;
+    public float missWindow = 0.45f;
 
-    // --- Daño por fallo ---
-    [Header("Damage Settings")]
-    public int missDamage = 1;          // Daño cuando fallas (Miss)
-    public int wrongSideDamage = 1;     // Daño cuando presionas dirección incorrecta
+    // -------- Damage --------
+    public int missDamage = 1;
+    public int wrongSideDamage = 1;
 
-    // --- State ---
-    public bool alreadyHit = false;
-    private bool initialized = false;
+    // -------- Beat Movement --------
+    [Header("Beat Movement")]
+    public float leadBeats = 4f;
 
-    // --- Movement ---
+    private float spawnBeat;
+    private Vector3 startPosition;
     private Vector3 targetPosition;
-    public float moveSpeed = 6f;
 
-    // --- Approach Circle ---
-    [Header("Approach Circle")]
-    public Transform approachCircle;
-    public float approachMaxMultiplier = 2.5f;
-    public float approachMinMultiplier = 0.6f;
+    private bool initialized;
+    public bool alreadyHit;
 
-    private Vector3 approachBaseScale;
-    private float startDistance;
+    // -------- Anchor --------
+    [Header("Hit Anchor")]
+    public Transform hitAnchor;
 
-    // --- Events ---
-    public event System.Action<HitResult, FacingDirection> OnHitResult;
-
-    // --- Referencia al sistema de vida ---
     private PlayerHealth playerHealth;
 
-    // --- Init ---
-    public void Initialize(float _targetBeat, Vector3 _targetPosition, FacingDirection _direction)
+    // ================= INIT =================
+    public void Initialize(
+        float _targetBeat,
+        Vector3 _startPosition,
+        Vector3 _targetPosition,
+        FacingDirection _direction)
     {
-        Debug.Log("========================================");
-        Debug.Log("INITIALIZE NOTA");
-        Debug.Log($"Beat objetivo: {_targetBeat}");
-        Debug.Log($"Posición objetivo: {_targetPosition}");
-        Debug.Log($"Dirección: {_direction}");
-
         targetBeat = _targetBeat;
-        targetPosition = _targetPosition;
         noteDirection = _direction;
+
+        startPosition = _startPosition;
+        targetPosition = _targetPosition;
+
+        spawnBeat = targetBeat - leadBeats;
+
+        transform.position = startPosition;
+
+        playerHealth = FindAnyObjectByType<PlayerHealth>();
+
         initialized = true;
-
-        // Buscar la referencia al sistema de vida del jugador
-        if (playerHealth == null)
-        {
-            Debug.Log("Buscando PlayerHealth...");
-            playerHealth = FindAnyObjectByType<PlayerHealth>();
-
-            if (playerHealth != null)
-            {
-                Debug.Log($"✓ PlayerHealth ENCONTRADO en: {playerHealth.gameObject.name}");
-                Debug.Log($"Vida máxima: {playerHealth.maxHealth}");
-            }
-            else
-            {
-                Debug.LogError("✗ NO se encontró PlayerHealth!");
-            }
-        }
-
-        if (approachCircle != null)
-        {
-            approachBaseScale = approachCircle.localScale;
-            startDistance = Vector3.Distance(transform.position, targetPosition);
-            approachCircle.localScale = approachBaseScale * approachMaxMultiplier;
-        }
-
-        Debug.Log("========================================\n");
     }
 
-    void Start()
-    {
-        Debug.Log($"NOTA START - Objeto: {gameObject.name}");
-    }
-
+    // ================= UPDATE =================
     void Update()
     {
         if (!initialized || alreadyHit)
             return;
 
-        // Verificar Conductor
         if (Conductor.instance == null)
-        {
-            Debug.LogError("Conductor.instance es NULL!");
             return;
-        }
 
         float songBeat = Conductor.instance.songPositionInBeats;
 
-        // Debug cada segundo para ver el beat actual
-        if (Time.frameCount % 60 == 0) // Cada segundo aprox (60fps)
-        {
-            Debug.Log($"Beat actual: {songBeat:F2}, Beat objetivo: {targetBeat:F2}, Diferencia: {songBeat - targetBeat:F2}");
-        }
+        // ---- Beat based interpolation ----
+        float t = Mathf.InverseLerp(spawnBeat, targetBeat, songBeat);
+        t = Mathf.Clamp01(t);
 
-        // --- Move towards hit point ---
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetPosition,
-            moveSpeed * Time.deltaTime
-        );
+        Vector3 anchorOffset = hitAnchor != null ? hitAnchor.localPosition : Vector3.zero;
+        Vector3 correctedTarget = targetPosition - anchorOffset;
 
-        // --- Approach circle scaling ---
-        if (approachCircle != null && startDistance > 0f)
-        {
-            float currentDistance = Vector3.Distance(transform.position, targetPosition);
-            float t = Mathf.Clamp01(currentDistance / startDistance);
-            float multiplier = Mathf.Lerp(approachMinMultiplier, approachMaxMultiplier, t);
-            approachCircle.localScale = approachBaseScale * multiplier;
-        }
+        transform.position = Vector3.Lerp(startPosition, correctedTarget, t);
 
-        // --- Auto miss ---
-        float beatDifference = songBeat - targetBeat;
-        if (beatDifference > missWindow)
-        {
-            Debug.Log($"⚠️ AUTO MISS DETECTADO");
-            Debug.Log($"Beat diferencia: {beatDifference:F2}, Miss Window: {missWindow}");
+        // ---- Auto miss ----
+        if (songBeat - targetBeat > missWindow)
             Miss();
-        }
-        else if (beatDifference > 0)
-        {
-            Debug.Log($"Beat diferencia positiva: {beatDifference:F2}");
-        }
     }
 
-    // --- Hit logic ---
+    // ================= HIT =================
     public HitResult TryHit(FacingDirection playerFacing)
     {
-        Debug.Log("========================================");
-        Debug.Log("TRYHIT LLAMADO");
-        Debug.Log($"Jugador mira: {playerFacing}");
-        Debug.Log($"Nota mira: {noteDirection}");
-        Debug.Log($"Ya golpeada: {alreadyHit}");
-
         if (alreadyHit)
-        {
-            Debug.Log("Nota ya golpeada, ignorando...");
-            Debug.Log("========================================\n");
             return HitResult.None;
-        }
 
         if (playerFacing != noteDirection)
         {
-            Debug.Log("✗ DIRECCIÓN INCORRECTA!");
-            Debug.Log($"Daño a aplicar: {wrongSideDamage}");
-            // Dirección incorrecta - aplicar daño
             ApplyDamage(wrongSideDamage);
             ResolveHit(HitResult.WrongSide);
-            Debug.Log("========================================\n");
             return HitResult.WrongSide;
         }
 
         float songBeat = Conductor.instance.songPositionInBeats;
         float error = Mathf.Abs(songBeat - targetBeat);
 
-        Debug.Log($"Beat actual: {songBeat:F3}");
-        Debug.Log($"Beat objetivo: {targetBeat:F3}");
-        Debug.Log($"Error absoluto: {error:F3}");
-        Debug.Log($"Perfect Window: {perfectWindow}");
-        Debug.Log($"Good Window: {goodWindow}");
-        Debug.Log($"Miss Window: {missWindow}");
-
         HitResult result = HitResult.None;
 
         if (error <= perfectWindow)
-        {
             result = HitResult.Perfect;
-            Debug.Log("✓ PERFECT!");
-        }
         else if (error <= goodWindow)
-        {
             result = HitResult.Good;
-            Debug.Log("✓ GOOD");
-        }
         else if (error <= missWindow)
-        {
             result = HitResult.Miss;
-            Debug.Log("✗ MISS (dentro de ventana)");
-        }
-        else
-        {
-            Debug.Log("Fuera de todas las ventanas");
-        }
 
         if (result != HitResult.None)
         {
-            // Si es un miss, aplicar daño
             if (result == HitResult.Miss)
-            {
-                Debug.Log($"Aplicando daño por miss: {missDamage}");
                 ApplyDamage(missDamage);
-            }
-            else
-            {
-                Debug.Log($"Resultado {result} - Sin daño");
-            }
 
             ResolveHit(result);
         }
 
-        Debug.Log("========================================\n");
         return result;
     }
 
-    // --- Aplicar daño al jugador ---
-    private void ApplyDamage(int damageAmount)
+    // ================= DAMAGE =================
+    private void ApplyDamage(int dmg)
     {
-        Debug.Log("========================================");
-        Debug.Log("APPLY DAMAGE");
-        Debug.Log($"Cantidad: {damageAmount}");
-
-        if (damageAmount <= 0)
-        {
-            Debug.Log("Daño es 0 o negativo, ignorando...");
-            Debug.Log("========================================\n");
+        if (dmg <= 0)
             return;
-        }
 
-        // Verificar referencia
         if (playerHealth == null)
-        {
-            Debug.LogWarning("playerHealth es NULL, buscando de nuevo...");
             playerHealth = FindAnyObjectByType<PlayerHealth>();
-        }
 
         if (playerHealth != null)
-        {
-            Debug.Log($"✓ PlayerHealth válido: {playerHealth.gameObject.name}");
-            Debug.Log("Llamando a TakeDamage...");
-            playerHealth.TakeDamage(damageAmount);
-        }
-        else
-        {
-            Debug.LogError("✗ PlayerHealth sigue siendo NULL!");
-            Debug.Log("¿Está el objeto con PlayerHealth en la escena?");
-            Debug.Log("¿Está activo el GameObject?");
-        }
-
-        Debug.Log("========================================\n");
+            playerHealth.TakeDamage(dmg);
     }
 
-    // --- Results ---
+    // ================= RESOLVE =================
     private void ResolveHit(HitResult result)
     {
-        Debug.Log($"ResolveHit: {result}");
         alreadyHit = true;
 
-        // === CORRECCIÓN: REGISTRAR EN SCOREMANAGER ===
-        if (ScoreManager.instance != null)
-        {
-            Debug.Log($"📊 Registrando en ScoreManager: {result}");
-            ScoreManager.instance.RegisterHit(result);
-        }
-        else
-        {
-            Debug.LogError("❌ ScoreManager.instance es NULL!");
-        }
-        // ==============================================
+        ScoreManager.instance?.RegisterHit(result);
 
-        // Verificar si el evento tiene suscriptores
-        if (OnHitResult != null)
-        {
-            Debug.Log($"Evento OnHitResult tiene {OnHitResult.GetInvocationList().Length} suscriptores");
-            OnHitResult?.Invoke(result, noteDirection);
-        }
-        else
-        {
-            Debug.LogWarning("OnHitResult no tiene suscriptores");
-        }
-
-        Debug.Log($"Destruyendo nota: {gameObject.name}");
-        Destroy(gameObject);
+        Destroy(transform.root.gameObject);
     }
 
+    // ================= MISS =================
     private void Miss()
     {
-        Debug.Log("========================================");
-        Debug.Log("MISS AUTOMÁTICO");
-        Debug.Log($"Nota beat: {targetBeat}");
-        Debug.Log($"Daño: {missDamage}");
-        Debug.Log($"Posición actual: {transform.position}");
-        Debug.Log($"Posición objetivo: {targetPosition}");
-
         alreadyHit = true;
 
-        // === CORRECCIÓN: REGISTRAR MISS EN SCOREMANAGER ===
-        if (ScoreManager.instance != null)
-        {
-            Debug.Log("📊 Registrando MISS en ScoreManager");
-            ScoreManager.instance.RegisterHit(HitResult.Miss);
-        }
-        // ==================================================
-
-        // Aplicar daño por miss automático (no presionar nada)
+        ScoreManager.instance?.RegisterHit(HitResult.Miss);
         ApplyDamage(missDamage);
 
-        // Verificar evento
-        if (OnHitResult != null)
-        {
-            OnHitResult?.Invoke(HitResult.Miss, noteDirection);
-        }
-
-        Debug.Log($"Destruyendo nota por miss: {gameObject.name}");
-        Destroy(gameObject);
-        Debug.Log("========================================\n");
+        Destroy(transform.root.gameObject);
     }
 
-    void OnDestroy()
+#if UNITY_EDITOR
+    void OnDrawGizmos()
     {
-        Debug.Log($"Nota DESTRUIDA: {gameObject.name} - Ya golpeada: {alreadyHit}");
+        if (hitAnchor != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(hitAnchor.position, 0.05f);
+        }
     }
+#endif
 }
