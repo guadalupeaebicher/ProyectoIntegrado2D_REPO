@@ -257,6 +257,18 @@ public class Note : MonoBehaviour
         Debug.Log($"ResolveHit: {result}");
         alreadyHit = true;
 
+        // === CORRECCIÓN: REGISTRAR EN SCOREMANAGER ===
+        if (ScoreManager.instance != null)
+        {
+            Debug.Log($"📊 Registrando en ScoreManager: {result}");
+            ScoreManager.instance.RegisterHit(result);
+        }
+        else
+        {
+            Debug.LogError("❌ ScoreManager.instance es NULL!");
+        }
+        // ==============================================
+
         // Verificar si el evento tiene suscriptores
         if (OnHitResult != null)
         {
@@ -283,6 +295,14 @@ public class Note : MonoBehaviour
 
         alreadyHit = true;
 
+        // === CORRECCIÓN: REGISTRAR MISS EN SCOREMANAGER ===
+        if (ScoreManager.instance != null)
+        {
+            Debug.Log("📊 Registrando MISS en ScoreManager");
+            ScoreManager.instance.RegisterHit(HitResult.Miss);
+        }
+        // ==================================================
+
         // Aplicar daño por miss automático (no presionar nada)
         ApplyDamage(missDamage);
 
@@ -302,4 +322,3 @@ public class Note : MonoBehaviour
         Debug.Log($"Nota DESTRUIDA: {gameObject.name} - Ya golpeada: {alreadyHit}");
     }
 }
-
