@@ -1,8 +1,8 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class Conductor : MonoBehaviour
 {
-    [Header ("Song Settings")]
+    [Header("Song Settings")]
     public float songBpm; //Beats per minute
     public float songOffset;
     public AudioSource musicSource;
@@ -23,10 +23,8 @@ public class Conductor : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //Load the AudioSource component
@@ -37,12 +35,11 @@ public class Conductor : MonoBehaviour
         musicSource.Play();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Determinar cuantos segundos pasaron desde que empezÛ la canciÛn
+        //Determinar cuantos segundos pasaron desde que empez√≥ la canci√≥n
         songPosition = (float)(AudioSettings.dspTime - dspSongTime);
-        //Determinar cu·ntos beats desde que empezÛ la canciÛn
+        //Determinar cu√°ntos beats desde que empez√≥ la canci√≥n
         songPositionInBeats = songPosition / secPerBeat;
     }
 }

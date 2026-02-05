@@ -7,9 +7,9 @@ public class Note : MonoBehaviour
     public FacingDirection noteDirection;
 
     [Header("Timing Windows")]
-    public float perfectWindow = 0.15f;
-    public float goodWindow = 0.30f;
-    public float missWindow = 0.45f;
+    public float perfectWindow = 0.08f;
+    public float goodWindow = 0.18f;
+    public float missWindow = 0.30f;
 
     // -------- Damage --------
     public int missDamage = 1;
@@ -46,7 +46,6 @@ public class Note : MonoBehaviour
         targetPosition = _targetPosition;
 
         spawnBeat = targetBeat - leadBeats;
-
         transform.position = startPosition;
 
         playerHealth = FindAnyObjectByType<PlayerHealth>();
@@ -74,9 +73,12 @@ public class Note : MonoBehaviour
 
         transform.position = Vector3.Lerp(startPosition, correctedTarget, t);
 
-        // ---- Auto miss ----
-        if (songBeat - targetBeat > missWindow)
+        // ✅ AUTO MISS CORREGIDO
+        // deja existir el rango GOOD antes de destruir la nota
+        if (songBeat > targetBeat + missWindow + goodWindow)
+        {
             Miss();
+        }
     }
 
     // ================= HIT =================
@@ -95,7 +97,7 @@ public class Note : MonoBehaviour
         float songBeat = Conductor.instance.songPositionInBeats;
         float error = Mathf.Abs(songBeat - targetBeat);
 
-        HitResult result = HitResult.None;
+        HitResult result;
 
         if (error <= perfectWindow)
             result = HitResult.Perfect;
@@ -103,15 +105,13 @@ public class Note : MonoBehaviour
             result = HitResult.Good;
         else if (error <= missWindow)
             result = HitResult.Miss;
+        else
+            return HitResult.None;
 
-        if (result != HitResult.None)
-        {
-            if (result == HitResult.Miss)
-                ApplyDamage(missDamage);
+        if (result == HitResult.Miss)
+            ApplyDamage(missDamage);
 
-            ResolveHit(result);
-        }
-
+        ResolveHit(result);
         return result;
     }
 
@@ -132,20 +132,19 @@ public class Note : MonoBehaviour
     private void ResolveHit(HitResult result)
     {
         alreadyHit = true;
-
         ScoreManager.instance?.RegisterHit(result);
-
         Destroy(transform.root.gameObject);
     }
 
     // ================= MISS =================
     private void Miss()
     {
-        alreadyHit = true;
+        if (alreadyHit)
+            return;
 
+        alreadyHit = true;
         ScoreManager.instance?.RegisterHit(HitResult.Miss);
         ApplyDamage(missDamage);
-
         Destroy(transform.root.gameObject);
     }
 
