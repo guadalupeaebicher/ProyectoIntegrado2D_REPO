@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuPausa
   menuPausa: {fileID: 1178641900}
-  pauseAction: {fileID: 0}
+  pauseAction: {fileID: -1653351056834396697, guid: ca3eef9da5db043408b1a267c6b5bfb7, type: 3}
 --- !u!4 &264000543
 Transform:
   m_ObjectHideFlags: 0
