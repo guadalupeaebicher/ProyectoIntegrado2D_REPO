@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     {
         controls = new PlayerInputActions();
 
-        // --- Flip ---
+        //Flip
         controls.Gameplay.Flip.performed += ctx =>
         {
             if (ctx.control.name == "leftArrow" || ctx.control.name == "dpadLeft")
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
                 FaceLeft();
         };
 
-        // --- Attack ---
+        //Attack
         controls.Gameplay.Attack.performed += ctx =>
         {
             TryHitNote();
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private void OnEnable() => controls.Gameplay.Enable();
     private void OnDisable() => controls.Gameplay.Disable();
 
-    // --- Flip ---
+    //Flip
     private void FaceLeft()
     {
         if (isFacingRight)
@@ -65,27 +65,48 @@ public class PlayerController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    // --- Hit logic ---
+    //Hit logic
     private void TryHitNote()
     {
-        FacingDirection playerFacing = isFacingRight ? FacingDirection.Right : FacingDirection.Left;
+        FacingDirection facing = isFacingRight
+            ? FacingDirection.Right
+            : FacingDirection.Left;
+
+        Note bestNote = null;
+        float bestError = float.MaxValue;
+        float beat = Conductor.instance.songPositionInBeats;
 
         foreach (var note in Object.FindObjectsByType<Note>(FindObjectsSortMode.None))
         {
             if (note.alreadyHit)
                 continue;
 
-            // Suscribimos el popup al evento de la nota
-            note.OnHitResult -= ShowHitPopup; // evitamos doble suscripción
-            note.OnHitResult += ShowHitPopup;
+            float error = Mathf.Abs(beat - note.targetBeat);
 
-            HitResult result = note.TryHit(playerFacing); // solo golpea si mirás hacia la nota
-            if (result != HitResult.None)
-                break; // solo una nota por input
+            if (error <= note.missWindow && error < bestError)
+            {
+                bestError = error;
+                bestNote = note;
+            }
+        }
+
+        if (bestNote == null)
+        {
+            // Fallaste completamente â†’ miss visual inmediato
+            ShowHitPopup(HitResult.Miss, facing);
+            return;
+        }
+
+        HitResult result = bestNote.TryHit(facing);
+
+        if (result != HitResult.None)
+        {
+            ShowHitPopup(result, bestNote.noteDirection);
         }
     }
 
-    // --- Popups ---
+
+    //Popups
     private void ShowHitPopup(HitResult result, FacingDirection noteDirection)
     {
         GameObject prefabToSpawn = null;
