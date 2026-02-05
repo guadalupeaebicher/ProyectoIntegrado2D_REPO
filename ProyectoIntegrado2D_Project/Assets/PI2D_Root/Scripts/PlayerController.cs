@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     public GameObject perfectPopupPrefab;
     public GameObject goodPopupPrefab;
     public GameObject missPopupPrefab;
-    public GameObject wrongSidePopupPrefab;
 
     private bool isFacingRight = true;
     private PlayerInputActions controls;
@@ -116,7 +115,6 @@ public class PlayerController : MonoBehaviour
             case HitResult.Perfect: prefabToSpawn = perfectPopupPrefab; break;
             case HitResult.Good: prefabToSpawn = goodPopupPrefab; break;
             case HitResult.Miss: prefabToSpawn = missPopupPrefab; break;
-            case HitResult.WrongSide: prefabToSpawn = wrongSidePopupPrefab; break;
         }
 
         if (prefabToSpawn != null)
